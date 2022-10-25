@@ -7,5 +7,6 @@ namespace OnTheFly_Final.Controllers
     [ApiController]
     public class PassengerController : ControllerBase
     {
+
     }
 }
