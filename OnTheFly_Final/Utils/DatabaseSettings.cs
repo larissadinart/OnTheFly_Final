@@ -7,7 +7,6 @@
         public string PassengerCollectionRestricted { get; set; }
         public string ConnectionString { get; set; }
         public string DataBaseName { get; set; }
-        public string SalesCollectionName { get; set; }
 
     }
 }
