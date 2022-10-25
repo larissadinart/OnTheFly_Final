@@ -23,6 +23,8 @@ namespace OnTheFly_Final.Models
 
         //[Required(ErrorMessage = "Este campo é obrigatório!")]
         //public Address Address { get; set; }
+        //[Required(ErrorMessage = "Este campo é obrigatório!")]
+        //public List<Airplane> Airplanes { get; set; }
 
     }
 }
