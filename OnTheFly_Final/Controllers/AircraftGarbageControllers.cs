@@ -34,10 +34,10 @@ namespace OnTheFly_Final.Controllers
         }
         [HttpGet]
         public ActionResult<List<AircraftGarbage>> GetAllAircraft()=>_aircraftGarbageServices.GetAllAircraftGarbage();
-        [HttpGet("{rab:length(5)}", Name = "GetAircraftGarbage")]
-        public ActionResult<Aircraft> GetAircraft(string rab)
+        [HttpGet("{rab:length(6)}", Name = "GetAircraftGarbage")]
+        public ActionResult<Aircraft> GetAircraftGarbage(string rab)
         {
-            var plane = _aircraftServices.GetAircraft(rab);
+            var plane = _aircraftGarbageServices.GetAircraftGarbage(rab);
             if (plane == null) return NotFound();
             return Ok(plane);
         }

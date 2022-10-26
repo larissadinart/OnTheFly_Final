@@ -40,7 +40,7 @@ namespace OnTheFly_Final.Services
         {
             string test = aircraft.RAB;
             //aircraft.RAB = test.Substring(0, 2) + "-" + test.Substring(2, 3);
-            _aircraft.DeleteOne(aircraft => aircraft.RAB == aircraft.RAB);
+            _aircraft.DeleteOne(aircraft => aircraft.RAB == test);
         }
     }
 }

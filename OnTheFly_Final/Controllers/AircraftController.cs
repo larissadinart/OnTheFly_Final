@@ -10,13 +10,13 @@ namespace OnTheFly_Final.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AircraftControllers : ControllerBase
+    public class AircraftController : ControllerBase
     {
         ValidationAircraft validation = new ValidationAircraft();
         private readonly AircraftServices _aircraftServices;
         private readonly AircraftGarbageServices _aircraftGarbageServices;
 
-        public AircraftControllers(AircraftServices aircraftServices, AircraftGarbageServices aircraftGarbageServices)
+        public AircraftController(AircraftServices aircraftServices, AircraftGarbageServices aircraftGarbageServices)
         {
             _aircraftServices = aircraftServices;
             _aircraftGarbageServices = aircraftGarbageServices;
@@ -36,8 +36,6 @@ namespace OnTheFly_Final.Controllers
             _aircraftServices.CreateAircraft(aircraft);
             return CreatedAtRoute("GetAircraft", new { rab = aircraft.RAB.ToString() }, aircraft);
         }
-
-
 
         [HttpGet("{rab:length(6)}", Name = "GetAircraft")]
         public ActionResult<Aircraft> GetAircraft(string rab)
@@ -67,10 +65,13 @@ namespace OnTheFly_Final.Controllers
             return NoContent();
         }
         [HttpDelete]
-        public ActionResult<Aircraft> DeleteAircraft(Aircraft aircraftIn, string rab)
+        public ActionResult<Aircraft> DeleteAircraft(string rab)
         {
-            aircraftIn.RAB = aircraftIn.RAB.ToLower();
-            var aircraft = _aircraftServices.GetAircraft(rab);
+            rab = rab.ToLower();
+          var aircraftIn= rab.Substring(0, 2) + "-" + rab.Substring(2, 3);
+          //  Aircraft aircraftIn = _aircraftServices.GetAircraft(rab);
+                //aircraftIn.RAB.ToLower();
+            var aircraft = _aircraftServices.GetAircraft(aircraftIn);
             if (aircraft == null) return NotFound("Aeronave não encontrada");
 
 
