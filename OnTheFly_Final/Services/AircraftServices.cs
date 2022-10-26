@@ -32,7 +32,7 @@ namespace OnTheFly_Final.Services
         public void UpdateAircraft(string rab, Aircraft aircraft)
         {
             string test = aircraft.RAB;
-            aircraft.RAB = test.Substring(0, 2) + "-" + test.Substring(2, 3);
+          //  aircraft.RAB = test.Substring(0, 2) + "-" + test.Substring(2, 3);
             _aircraft.ReplaceOne(aircraft => aircraft.RAB == rab, aircraft);
         }
 

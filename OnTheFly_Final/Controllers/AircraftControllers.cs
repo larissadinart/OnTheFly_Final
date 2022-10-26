@@ -57,9 +57,12 @@ namespace OnTheFly_Final.Controllers
         {
             aircraftIn.RAB = aircraftIn.RAB.ToLower();
             var registration = validation.RabValidation(aircraftIn.RAB);
-            var aircraft = _aircraftServices.GetAircraft(rab);
+            if (registration != aircraftIn.RAB)
+                return BadRequest("Aeronave não está de acordo com as normas");
+            aircraftIn.RAB = rab.Substring(0, 2) + "-" + rab.Substring(2, 3);
+            var aircraft = _aircraftServices.GetAircraft(aircraftIn.RAB);
             if (aircraft == null) return NotFound("Não encontrado!");
-            aircraftIn.RAB = rab;
+            //aircraftIn.RAB = rab;
             _aircraftServices.UpdateAircraft(aircraft.RAB, aircraftIn);
             return NoContent();
         }
