@@ -1,10 +1,10 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using System;
 using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace OnTheFly_Final.Models
 {
-    public class Aircraft
+    public class AircraftGarbage
     {
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
@@ -18,9 +18,9 @@ namespace OnTheFly_Final.Models
         public DateTime DtLastFlight { get; set; }
         //  [Required(ErrorMessage = "Este campo é obrigatório!"), StringLength(19, ErrorMessage = "CNPJ inválido!")]
         // public Company Company{ get; set; }
-        public Aircraft()
+        public AircraftGarbage()
         {
-            DtRegistry=DateTime.Now;
+            DtRegistry = DateTime.Now;
             this.DtLastFlight = DtRegistry;
         }
     }

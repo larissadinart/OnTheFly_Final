@@ -40,6 +40,7 @@ namespace OnTheFly_Final
 
 
             services.AddSingleton<AircraftServices>();
+            services.AddSingleton<AircraftGarbageServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

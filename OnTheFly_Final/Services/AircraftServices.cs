@@ -29,5 +29,9 @@ namespace OnTheFly_Final.Services
 
         public void UpdateAircraft(string rab, Aircraft aircraftIn) => _aircraft.ReplaceOne(aircraft => aircraft.RAB == rab, aircraftIn);
 
+        public void RemoveAircraft(Aircraft aircraftIn)
+        {
+            _aircraft.DeleteOne(aircraft => aircraft.RAB == aircraftIn.RAB);
+        }
     }
 }

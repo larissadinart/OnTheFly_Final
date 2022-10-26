@@ -13,10 +13,12 @@ namespace OnTheFly_Final.Controllers
     {
         ValidationAircraft validation = new ValidationAircraft();
         private readonly AircraftServices _aircraftServices;
+        private readonly AircraftGarbageServices _aircraftGarbageServices;
 
-        public AircraftControllers(AircraftServices aircraftServices)
+        public AircraftControllers(AircraftServices aircraftServices, AircraftGarbageServices aircraftGarbageServices)
         {
             _aircraftServices = aircraftServices;
+            _aircraftGarbageServices = aircraftGarbageServices;
         }
 
         [HttpPost]
@@ -49,6 +51,30 @@ namespace OnTheFly_Final.Controllers
             _aircraftServices.UpdateAircraft(aircraft.RAB, aircraftIn);
             return NoContent();
         }
+        [HttpDelete]
+        public ActionResult<Aircraft> DeleteAircraft(Aircraft aircraftIn)
+        {
+        
+            Aircraft aircraft = _aircraftServices.GetAircraft(aircraftIn.RAB);
+            if (aircraft == null) return NotFound("Aeronave não encontrada");
 
+           
+            AircraftGarbage aircraftGarbage = new AircraftGarbage();    //crio novo objeto
+
+            //populo esse novo objeto
+            aircraftGarbage.Id = aircraftIn.Id;
+            aircraftGarbage.RAB = aircraftIn.RAB;
+            aircraftGarbage.Capacity = aircraftIn.Capacity;
+            aircraftGarbage.DtRegistry = aircraftIn.DtRegistry;
+            aircraftGarbage.DtLastFlight = aircraftIn.DtLastFlight;
+            //aircraftGarbage.Company=aircraftIn.Company;
+            _aircraftServices.RemoveAircraft(aircraftIn);
+            //insiro na coleção de "lixeira"
+            _aircraftGarbageServices.CreateAircraftGarbage(aircraftGarbage);
+           
+           
+            return NoContent();
+
+        }
     }
 }

@@ -5,5 +5,6 @@
         string ConnectionString { get; set; }
         string DatabaseAircraft { get; set; }
         string AircraftCollectionName { get; set; }
+        string AircraftGarbageCollectionName { get; set; }
     }
 }
