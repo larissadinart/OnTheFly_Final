@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using OnTheFly_Final.Models;
 using OnTheFly_Final.Utils;
+using System.Collections.Generic;
 
 namespace OnTheFly_Final.Services
 {
@@ -21,6 +22,8 @@ namespace OnTheFly_Final.Services
             _companyGarbage.InsertOne(companyGarbage);
             return companyGarbage;
         }
-        public CompanyGarbage GetCompanyGarbage(string cnpj) => _companyGarbage.Find<CompanyGarbage>(companyGarbage => companyGarbage.Company.CNPJ == cnpj).FirstOrDefault();
+        public List<CompanyGarbage> GetAllCompanyGarbage() => _companyGarbage.Find<CompanyGarbage>(companyGarbage => true).ToList();
+
+        public CompanyGarbage GetCompanyGarbage(string cnpj) => _companyGarbage.Find<CompanyGarbage>(companyGarbage => companyGarbage.CNPJ == cnpj).FirstOrDefault();
     }
 }

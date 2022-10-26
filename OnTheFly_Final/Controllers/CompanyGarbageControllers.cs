@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using OnTheFly_Final.Models;
 using OnTheFly_Final.Services;
+using System.Collections.Generic;
 
 namespace OnTheFly_Final.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controllers]")]
     [ApiController]
     public class CompanyGarbageControllers : ControllerBase
     {
@@ -18,28 +19,35 @@ namespace OnTheFly_Final.Controllers
             _companyServices = companyServices;
         }
 
-        [HttpPost]
-        public ActionResult<CompanyControllers> PostCompany(CompanyGarbage companyGarbage, string cnpj)
+        [HttpPost("{cnpj:length(19)}")]
+        public ActionResult<CompanyGarbage> PostCompany(CompanyGarbage companyGarbage, string cnpj)
         {
-            Company companyIn = _companyServices.GetOneCompany(cnpj);
-            companyGarbage.Company.CNPJ = companyIn.CNPJ;
-            companyGarbage.Company.Name = companyIn.Name;
-            companyGarbage.Company.NameOpt = companyIn.NameOpt;
-            companyGarbage.Company.DtOpen = companyIn.DtOpen;
-            companyGarbage.Company.Status = companyIn.Status;
+            Company companyIn = _companyServices.GetCompany(cnpj);
+
+
+            companyGarbage.CNPJ = companyIn.CNPJ;
+            companyGarbage.Name = companyIn.Name;
+            companyGarbage.NameOpt = companyIn.NameOpt;
+            companyGarbage.DtOpen = companyIn.DtOpen;
+            companyGarbage.Status = companyIn.Status;
 
             _companyGarbageServices.CreateCompanyGarbage(companyGarbage);
             return CreatedAtRoute("GetCompanyGarbage", new { cnpj = companyIn.CNPJ.ToString() }, companyIn);
         }
 
-        [HttpGet("{cnpj:length(19)}", Name = "GetCompanyGarbage")]
-        public ActionResult<Company> GetOneCompany(string cnpj)
+        [HttpGet]
+        public ActionResult<List<CompanyGarbage>> GetAllCompanyGarbage() => _companyGarbageServices.GetAllCompanyGarbage();
+
+
+        [HttpGet("{cnpj}", Name = "GetCompanyGarbage")]
+        public ActionResult<Company> GetCompanyGarbage(string cnpj)
         {
-            var company = _companyServices.GetOneCompany(cnpj);
+            var company = _companyGarbageServices.GetCompanyGarbage(cnpj);
             if (company == null)
-                return NotFound("Something went wrong in the request, company not found!");
+                return NotFound();
 
             return Ok(company);
         }
+
     }
 }

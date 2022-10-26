@@ -25,7 +25,7 @@ namespace OnTheFly_Final.Services
 
         public List<Company> GetAllCompany() => _company.Find<Company>(company => true).ToList();
 
-        public Company GetOneCompany(string cnpj) => _company.Find<Company>(company => company.CNPJ == cnpj).FirstOrDefault();
+        public Company GetCompany(string cnpj) => _company.Find<Company>(company => company.CNPJ == cnpj).FirstOrDefault();
         public void UpdateCompany(string cnpj, Company companyIn)
         {
             _company.ReplaceOne(company => company.CNPJ == cnpj, companyIn);
