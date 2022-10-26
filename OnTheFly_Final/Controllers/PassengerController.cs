@@ -24,7 +24,7 @@ namespace OnTheFly_Final.Controllers
         public ActionResult<Passenger> GetPassenger(string cpf)
         {
             var passenger = _passengerServices.GetPassenger(cpf);
-            if(passenger == null)
+            if (passenger == null)
             {
                 return NotFound();
             }
@@ -32,7 +32,7 @@ namespace OnTheFly_Final.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Passenger> PostPassenger([FromBody] Passenger passenger)
+        public ActionResult<Passenger> PostPassenger(Passenger passenger)
         {
             _passengerServices.CreatePassenger(passenger);
             return CreatedAtRoute("GetPassenger", new { CPF = passenger.CPF.ToString() }, passenger);
@@ -42,14 +42,14 @@ namespace OnTheFly_Final.Controllers
         public ActionResult<Passenger> UpdatePassenger(Passenger passengerIn, string cpf)
         {
             var pass = _passengerServices.GetPassenger(cpf);
-            if(pass == null)
+            if (pass == null)
             {
                 return NotFound();
             }
             else
             {
                 _passengerServices.UpdatePassenger(passengerIn, cpf);
-                    pass = _passengerServices.GetPassenger(cpf);
+                pass = _passengerServices.GetPassenger(cpf);
                 return Ok(pass);
             }
         }
@@ -57,11 +57,12 @@ namespace OnTheFly_Final.Controllers
         public ActionResult Delete(string cpf)
         {
             var passenger = _passengerServices.GetPassenger(cpf);
-            if(passenger != null)
+            if (passenger != null)
             {
                 _passengerServices.Remove(passenger, cpf);
                 return NoContent();
-            }return NotFound();
+            }
+            return NotFound();
         }
     }
 }

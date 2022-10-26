@@ -10,10 +10,10 @@ namespace OnTheFly_Final.Services
     {
         private IMongoCollection<Sales> _sales;
 
-        public SalesServices(IDatabaseSettings settings)
+        public SalesServices(IDataBaseSettings settings)
         {
             var sales = new MongoClient(settings.ConnectionString);
-            var dataBase = sales.GetDatabase(settings.DatabaseName);
+            var dataBase = sales.GetDatabase(settings.SalesDataBaseName);
             _sales = dataBase.GetCollection<Sales>(settings.SalesCollectionName);
 
         }
@@ -25,11 +25,11 @@ namespace OnTheFly_Final.Services
         }
 
         public List<Sales> GetAllSales() => _sales.Find(sales => true).ToList();
-        public Sales GetSales(string cpf) => _sales.Find<Sales>(sales => sales.Passagers.Any(passager => passager.Cpf == cpf)).FirstOrDefault();
+        public Sales GetSales(string cpf) => _sales.Find<Sales>(sales => sales.Passagers.Any(passager => passager.CPF == cpf)).FirstOrDefault();
 
         public void UpdateSales(string cpf, Sales salesIN)
         {
-            _sales.ReplaceOne(sales => sales.Passagers.Any(passager => passager.Cpf == cpf), salesIN);
+            _sales.ReplaceOne(sales => sales.Passagers.Any(passager => passager.CPF == cpf), salesIN);
         }
 
     }

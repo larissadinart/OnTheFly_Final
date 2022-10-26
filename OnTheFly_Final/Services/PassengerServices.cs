@@ -12,7 +12,7 @@ namespace OnTheFly_Final.Services
         public PassengerServices(IDataBaseSettings settings)
         {
             var passenger = new MongoClient(settings.ConnectionString);
-            var database = passenger.GetDatabase(settings.DataBaseName);
+            var database = passenger.GetDatabase(settings.PassengerDataBaseName);
             _passenger = database.GetCollection<Passenger>(settings.PassengerCollectionName);
         }
         public Passenger CreatePassenger(Passenger passenger)

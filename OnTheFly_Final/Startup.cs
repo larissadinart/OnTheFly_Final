@@ -38,6 +38,11 @@ namespace OnTheFly_Final
             services.Configure<DataBaseSettings>(Configuration.GetSection(nameof(DataBaseSettings)));
             IServiceCollection serviceCollection = services.AddSingleton<IDataBaseSettings>(sp => sp.GetRequiredService<IOptions<DataBaseSettings>>().Value);
             services.AddSingleton<PassengerServices>();
+            services.AddSingleton<AircraftServices>();
+            services.AddSingleton<AirportServices>();
+            services.AddSingleton<FlightsServices>();
+            services.AddSingleton<SalesServices>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
