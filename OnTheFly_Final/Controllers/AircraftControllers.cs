@@ -26,7 +26,7 @@ namespace OnTheFly_Final.Controllers
         {
             var rab = validation.RabValidation(aircraft.RAB);
             var plane=_aircraftServices.GetAircraft(rab);
-            if (plane != null) return NotFound("Aeronave já cadastrada!");
+            if (plane == null) return NotFound("Aeronave já cadastrada!");
             _aircraftServices.CreateAircraft(aircraft);
             return CreatedAtRoute("GetAircraft", new { rab = aircraft.RAB.ToString() }, aircraft);
         }
@@ -52,26 +52,25 @@ namespace OnTheFly_Final.Controllers
             return NoContent();
         }
         [HttpDelete]
-        public ActionResult<Aircraft> DeleteAircraft(Aircraft aircraftIn)
+        public ActionResult<Aircraft> DeleteAircraft(string rab)
         {
-        
-            Aircraft aircraft = _aircraftServices.GetAircraft(aircraftIn.RAB);
+            var aircraft = _aircraftServices.GetAircraft(rab);
             if (aircraft == null) return NotFound("Aeronave não encontrada");
 
            
             AircraftGarbage aircraftGarbage = new AircraftGarbage();    //crio novo objeto
 
             //populo esse novo objeto
-            aircraftGarbage.Id = aircraftIn.Id;
-            aircraftGarbage.RAB = aircraftIn.RAB;
-            aircraftGarbage.Capacity = aircraftIn.Capacity;
-            aircraftGarbage.DtRegistry = aircraftIn.DtRegistry;
-            aircraftGarbage.DtLastFlight = aircraftIn.DtLastFlight;
-            //aircraftGarbage.Company=aircraftIn.Company;
-            _aircraftServices.RemoveAircraft(aircraftIn);
-            //insiro na coleção de "lixeira"
-            _aircraftGarbageServices.CreateAircraftGarbage(aircraftGarbage);
            
+            aircraftGarbage.RAB = aircraft.RAB;
+            aircraftGarbage.Capacity = aircraft.Capacity;
+            aircraftGarbage.DtRegistry = aircraft.DtRegistry;
+            aircraftGarbage.DtLastFlight = aircraft.DtLastFlight;
+            //aircraftGarbage.Company=aircraft.Company;
+            _aircraftServices.RemoveAircraft(aircraft);
+            _aircraftGarbageServices.CreateAircraftGarbage(aircraftGarbage);
+
+            //insiro na coleção de "lixeira"
            
             return NoContent();
 

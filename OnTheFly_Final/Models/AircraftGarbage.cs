@@ -4,11 +4,11 @@ using System;
 
 namespace OnTheFly_Final.Models
 {
+    [BsonIgnoreExtraElements]
+
     public class AircraftGarbage
     {
-        [BsonId]
-        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string Id { get; set; }
+       
         [Required(ErrorMessage = "Este campo é obrigatório!"), StringLength(6, ErrorMessage = "RAB inválido!")]
         public string RAB { get; set; }
         [Required(ErrorMessage = "Este campo é obrigatório!")]

@@ -13,7 +13,7 @@ namespace OnTheFly_Final.Services
         public AircraftServices(IDatabaseSettings settings)
         {
             var aircraft = new MongoClient(settings.ConnectionString);
-            var database = aircraft.GetDatabase(settings.DatabaseAircraft);
+            var database = aircraft.GetDatabase(settings.AircraftDatabaseName);
             _aircraft = database.GetCollection<Aircraft>(settings.AircraftCollectionName);
         }
 

@@ -20,7 +20,7 @@ namespace OnTheFly_Final.Utils
                 //verifica se tem q e w onde não pode ter
                 if (letters[3] != 'Q' && letters[4] != 'W')
                 {
-                    string brazilianAeronauticalRegistration = letters[2] + letters[3] + letters[4].ToString();
+                    string brazilianAeronauticalRegistration = letters[2].ToString()+ letters[3].ToString() + letters[4].ToString();
                     if (rabForbidden.Contains(brazilianAeronauticalRegistration) == false)
                     {
                         string prefixRab = letters[0] + letters[1].ToString();
@@ -28,7 +28,7 @@ namespace OnTheFly_Final.Utils
                         {
                             //chamo o método da GabiCiriano para validar entrada do cnpj
 
-                             return rab;
+                            return rab;
                         }
                         else
                         {
