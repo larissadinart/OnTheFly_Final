@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OnTheFly_Final.Models;
 using OnTheFly_Final.Services;
+using System.Collections.Generic;
 
 namespace OnTheFly_Final.Controllers
 {
@@ -31,6 +32,8 @@ namespace OnTheFly_Final.Controllers
             _aircraftGarbageServices.CreateAircraftGarbage(aircraftGarbage);
             return CreatedAtRoute("GetAircraftGarbage", new { rab = aircraftIn.RAB.ToString() }, aircraftIn);
         }
+        [HttpGet]
+        public ActionResult<List<AircraftGarbage>> GetAllAircraft()=>_aircraftGarbageServices.GetAllAircraftGarbage();
         [HttpGet("{rab:length(5)}", Name = "GetAircraftGarbage")]
         public ActionResult<Aircraft> GetAircraft(string rab)
         {

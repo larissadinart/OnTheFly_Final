@@ -19,6 +19,8 @@ namespace OnTheFly_Final.Services
 
         public Aircraft CreateAircraft(Aircraft aircraft)
         {
+            string test = aircraft.RAB;
+            aircraft.RAB = test.Substring(0, 2) + "-" + test.Substring(2, 3);
             _aircraft.InsertOne(aircraft);
             return aircraft;
         }
@@ -27,11 +29,18 @@ namespace OnTheFly_Final.Services
 
         public List<Aircraft> GetAllAircraft() => _aircraft.Find<Aircraft>(aircraft => true).ToList();
 
-        public void UpdateAircraft(string rab, Aircraft aircraftIn) => _aircraft.ReplaceOne(aircraft => aircraft.RAB == rab, aircraftIn);
-
-        public void RemoveAircraft(Aircraft aircraftIn)
+        public void UpdateAircraft(string rab, Aircraft aircraft)
         {
-            _aircraft.DeleteOne(aircraft => aircraft.RAB == aircraftIn.RAB);
+            string test = aircraft.RAB;
+            aircraft.RAB = test.Substring(0, 2) + "-" + test.Substring(2, 3);
+            _aircraft.ReplaceOne(aircraft => aircraft.RAB == rab, aircraft);
+        }
+
+        public void RemoveAircraft(Aircraft aircraft)
+        {
+            string test = aircraft.RAB;
+            //aircraft.RAB = test.Substring(0, 2) + "-" + test.Substring(2, 3);
+            _aircraft.DeleteOne(aircraft => aircraft.RAB == aircraft.RAB);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using OnTheFly_Final.Models;
 using OnTheFly_Final.Utils;
+using System.Collections.Generic;
 
 namespace OnTheFly_Final.Services
 {
@@ -20,7 +21,7 @@ namespace OnTheFly_Final.Services
             _aircraftGarbage.InsertOne(aircraftgarbage);
             return aircraftgarbage;
         }
-
+        public List<AircraftGarbage> GetAllAircraftGarbage() => _aircraftGarbage.Find<AircraftGarbage>(aircraftGarbage => true).ToList();
         public AircraftGarbage GetAircraftGarbage(string rab) => _aircraftGarbage.Find<AircraftGarbage>(aircraftGarbage => aircraftGarbage.RAB == rab).FirstOrDefault();
     }
 }
