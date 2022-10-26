@@ -19,10 +19,11 @@ namespace OnTheFly_Final.Controllers
         [HttpGet]
         public ActionResult<List<Company>> GetAllCompany() => _companyServices.GetAllCompany();
 
-        [HttpGet("{cnpj}", Name = "GetOneCompany")]
+        [HttpGet("{cnpj}", Name = "GetCompany")]
         public ActionResult<Company> GetOneCompany(string cnpj)
         {
             var company = _companyServices.GetOneCompany(cnpj);
+
             if (company == null) 
                 return NotFound("Something went wrong in the request, company not found!");
 

@@ -12,7 +12,7 @@ namespace OnTheFly_Final.Services
         public CompanyServices(IDataBaseSettings settings)
         {
             var company = new MongoClient(settings.ConnectionString);
-            var database = company.GetDatabase(settings.DatabaseName);
+            var database = company.GetDatabase(settings.CompanyDatabaseName);
             _company = database.GetCollection<Company>(settings.CompanyCollectionName);
 
         }
@@ -24,6 +24,7 @@ namespace OnTheFly_Final.Services
         }
 
         public List<Company> GetAllCompany() => _company.Find<Company>(company => true).ToList();
+
         public Company GetOneCompany(string cnpj) => _company.Find<Company>(company => company.CNPJ == cnpj).FirstOrDefault();
         public void UpdateCompany(string cnpj, Company companyIn)
         {

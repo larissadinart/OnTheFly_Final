@@ -4,12 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OnTheFly_Final.Models
 {
+    [BsonIgnoreExtraElements]
     public class Company
     {
-        [BsonId]
-        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string Id { get; set; }
-
         [Required(ErrorMessage = "Este campo é obrigatório!")]
             [StringLength(19)]
         public string CNPJ { get; set; }
@@ -23,7 +20,6 @@ namespace OnTheFly_Final.Models
         public string NameOpt { get; set; }
 
         [Required(ErrorMessage = "Este campo é obrigatório!")]
-        [StringLength(19)]
         public DateTime DtOpen { get; set; }
         public bool ? Status { get; set; }
 
