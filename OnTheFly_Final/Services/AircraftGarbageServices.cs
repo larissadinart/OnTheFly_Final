@@ -12,7 +12,7 @@ namespace OnTheFly_Final.Services
         {
             var aircraft = new MongoClient(settings.ConnectionString);
             var database = aircraft.GetDatabase(settings.AircraftDatabaseName);
-            _aircraftGarbage = database.GetCollection<AircraftGarbage>(settings.AircraftCollectionName);
+            _aircraftGarbage = database.GetCollection<AircraftGarbage>(settings.AircraftGarbageCollectionName);
         }
 
         public AircraftGarbage CreateAircraftGarbage(AircraftGarbage aircraftgarbage)

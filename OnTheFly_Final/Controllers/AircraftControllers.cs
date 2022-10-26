@@ -25,8 +25,11 @@ namespace OnTheFly_Final.Controllers
         public ActionResult<Aircraft> PostAircraft(Aircraft aircraft)
         {
             var rab = validation.RabValidation(aircraft.RAB);
+            if (rab != aircraft.RAB)
+                return BadRequest("Aeronave não está de acordo com as normas");
             var plane=_aircraftServices.GetAircraft(rab);
-            if (plane == null) return NotFound("Aeronave já cadastrada!");
+            if (plane != null) return NotFound("Aeronave já cadastrada!");
+           
             _aircraftServices.CreateAircraft(aircraft);
             return CreatedAtRoute("GetAircraft", new { rab = aircraft.RAB.ToString() }, aircraft);
         }
