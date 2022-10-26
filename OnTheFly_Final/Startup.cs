@@ -38,6 +38,9 @@ namespace OnTheFly_Final
             services.Configure<DataBaseSettings>(Configuration.GetSection(nameof(DataBaseSettings)));
             IServiceCollection serviceCollection = services.AddSingleton<IDataBaseSettings>(sp => sp.GetRequiredService<IOptions<DataBaseSettings>>().Value);
             services.AddSingleton<PassengerServices>();
+            services.AddSingleton<AddressServices>();
+            services.AddSingleton<PassengerGarbageServices>();
+            services.AddSingleton<PassengerRestrictedServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

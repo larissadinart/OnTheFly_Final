@@ -1,11 +1,14 @@
 ﻿namespace OnTheFly_Final.Utils
 {
-    public class IDataBaseSettings
+    public interface IDataBaseSettings
     {
-        public string PassengerCollectionName { get; set; }
-        public string PassengerCollectionGarbage { get; set; }
-        public string PassengerCollectionRestricted { get; set; }
-        public string ConnectionString { get; set; }
-        public string DataBaseName { get; set; }
+         string SalesCollectionName { get; set; }
+         string PassengerCollectionName { get; set; }
+         string PassengerGarbageCollectionName { get; set; }
+         string PassengerRestrictedCollectionName { get; set; }
+         string AddressCollectionName { get; set; }
+         string ConnectionString { get; set; }
+         string PassengerDataBaseName { get; set; }
+
     }
 }

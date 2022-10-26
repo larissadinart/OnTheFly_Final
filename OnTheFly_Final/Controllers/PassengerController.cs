@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Amazon.DynamoDBv2.Model;
 using Microsoft.AspNetCore.Mvc;
 using OnTheFly_Final.Models;
 using OnTheFly_Final.Services;
@@ -11,57 +10,89 @@ namespace OnTheFly_Final.Controllers
     public class PassengerController : ControllerBase
     {
         private readonly PassengerServices _passengerServices;
+        private readonly AddressServices _addressServices;
+        private readonly PassengerGarbageServices _passengerGarbageServices;
 
-        public PassengerController(PassengerServices passengerServices)
+        public PassengerController(PassengerServices passengerServices, PassengerGarbageServices passengerGarbageServices, AddressServices addressServices)
         {
             _passengerServices = passengerServices;
+            _addressServices = addressServices;
+            _passengerGarbageServices = passengerGarbageServices;
         }
 
         [HttpGet]
-        public ActionResult<List<Passenger>> GetAllPassenger() => _passengerServices.GetAllPassenger(); //criar metodo get
+        public ActionResult<List<Passenger>> GetAllPassenger() => _passengerServices.GetAllPassengers();
 
-        [HttpGet("{Cpf:length(14)}", Name = "GetPassenger")]
-        public ActionResult<Passenger> GetPassenger(string cpf)
+
+        [HttpGet("{cpf}", Name = "GetCpf")]
+        public ActionResult<Passenger> GetPassengerCpf(string cpf) 
         {
-            var passenger = _passengerServices.GetPassenger(cpf);
-            if(passenger == null)
+            var pass = _passengerServices.GetPassenger(cpf);
+            if (pass == null)
             {
                 return NotFound();
             }
-            return Ok(passenger);
+            return Ok(pass);
         }
 
         [HttpPost]
-        public ActionResult<Passenger> PostPassenger([FromBody] Passenger passenger)
+        public ActionResult<Passenger> PostPassenger(Passenger passenger)
         {
+            Address address = _addressServices.Create(passenger.Address);
+            passenger.Address = address;
+
             _passengerServices.CreatePassenger(passenger);
-            return CreatedAtRoute("GetPassenger", new { CPF = passenger.CPF.ToString() }, passenger);
+            return CreatedAtRoute("GetCpf", new { CPF = passenger.CPF.ToString() }, passenger);
         }
 
-        [HttpPut("{cpf}")]
-        public ActionResult<Passenger> UpdatePassenger(Passenger passengerIn, string cpf)
+        [HttpPut]
+        public ActionResult<Passenger> PutPassenger(Passenger passengerIn, string cpf) //nao esta encontrando o objeto no banco
         {
             var pass = _passengerServices.GetPassenger(cpf);
-            if(pass == null)
+
+            if (pass == null)
             {
                 return NotFound();
             }
             else
             {
                 _passengerServices.UpdatePassenger(passengerIn, cpf);
-                    pass = _passengerServices.GetPassenger(cpf);
+                pass = _passengerServices.GetPassenger(cpf);
                 return Ok(pass);
             }
         }
-        [HttpDelete("{id}")]
-        public ActionResult Delete(string cpf)
+
+        [HttpDelete]
+        public ActionResult DeletePassenger(string cpf)
         {
             var passenger = _passengerServices.GetPassenger(cpf);
-            if(passenger != null)
+
+            if (passenger == null)
             {
-                _passengerServices.Remove(passenger, cpf);
-                return NoContent();
-            }return NotFound();
+                return NotFound("Passageiro não encontrado!");
+            }
+            else
+            {
+                PassengerGarbage passengerGarbage = new();
+
+                passengerGarbage.CPF = passenger.CPF;
+                passengerGarbage.Name = passenger.Name;
+                passengerGarbage.Gender = passenger.Gender;
+                passengerGarbage.Phone = passenger.Phone;
+                passengerGarbage.DtBirth = passenger.DtBirth;
+                passengerGarbage.DtRegister = passenger.DtRegister;
+                passengerGarbage.Status = passenger.Status;
+                passengerGarbage.Address = passenger.Address;
+
+                _passengerServices.RemovePassenger(passenger, cpf);
+                _passengerGarbageServices.CreatePassengerGarbage(passengerGarbage);
+
+            }
+            return NoContent();
         }
+
+
     }
+
 }
+

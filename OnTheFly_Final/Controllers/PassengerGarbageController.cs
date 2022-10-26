@@ -1,0 +1,58 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using OnTheFly_Final.Models;
+using OnTheFly_Final.Services;
+
+namespace OnTheFly_Final.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PassengerGarbageController : ControllerBase
+    {
+        private readonly PassengerGarbageServices _passengerGarbageServices;
+        private readonly AddressServices _addressServices;
+        private readonly PassengerServices _passengerServices;
+        public PassengerGarbageController(PassengerServices passengerServices,AddressServices address, PassengerGarbageServices passengerGarbageServices)
+        {
+            _passengerGarbageServices = passengerGarbageServices;
+            _addressServices = address;
+            _passengerServices = passengerServices;
+        }
+
+        [HttpPost]
+        public ActionResult<PassengerGarbage> PostPassenger(PassengerGarbage passengerGarbage, string cpf)
+        {
+            Passenger passengerIn = _passengerServices.GetPassenger(cpf);
+
+            Address address1 = _addressServices.Create(passengerGarbage.Address);
+            passengerGarbage.Address = address1;
+
+            passengerGarbage.CPF = passengerIn.CPF;
+            passengerGarbage.Name = passengerIn.Name;
+            passengerGarbage.Gender = passengerIn.Gender;
+            passengerGarbage.Phone = passengerIn.Phone;
+            passengerGarbage.DtBirth = passengerIn.DtBirth;
+            passengerGarbage.DtRegister = passengerIn.DtRegister;
+            passengerGarbage.Status = passengerIn.Status;
+            passengerGarbage.Address = passengerIn.Address;
+
+            _passengerGarbageServices.CreatePassengerGarbage(passengerGarbage);
+            return CreatedAtRoute("GetPassengerGarbage", new { cpf = passengerIn.CPF.ToString() }, passengerIn);
+        }
+
+        [HttpGet("{cpf}", Name = "GetPassengerGarbage")]
+        public ActionResult<PassengerGarbage> GetPassenger(string cpf)
+        {
+            var pass = _passengerGarbageServices.GetPassengerGarbage(cpf); 
+            {
+                if(pass == null)
+                {
+                    return NotFound();
+                }return Ok(pass);
+            }
+        }
+
+
+
+
+    }
+}
