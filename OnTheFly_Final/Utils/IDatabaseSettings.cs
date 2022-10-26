@@ -3,7 +3,7 @@
     public interface IDatabaseSettings
     {
         string ConnectionString { get; set; }
-        string DatabaseName { get; set; }
+        string DatabaseAircraft { get; set; }
         string AircraftCollectionName { get; set; }
     }
 }
