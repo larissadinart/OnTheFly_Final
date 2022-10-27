@@ -46,9 +46,8 @@ namespace OnTheFly_Final.Controllers
 
             _companyBlockedServices.CreateCompanyBlocked(companyBlocked);
             company.Status = false;
-            _companyServices.UpdateCompany(cnpj, company);
+            _companyServices.UpdateCompany(company, cnpj);
             return Ok(companyBlocked);
         }
-       
     }
 }

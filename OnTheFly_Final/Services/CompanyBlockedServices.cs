@@ -8,7 +8,6 @@ namespace OnTheFly_Final.Services
     public class CompanyBlockedServices
     {
         private readonly IMongoCollection<CompanyBlocked> _companyBlocked;
-
         public CompanyBlockedServices(IDataBaseSettings settings)
         {
             var companyBlocked = new MongoClient(settings.ConnectionString);
@@ -21,7 +20,6 @@ namespace OnTheFly_Final.Services
             return companyBlocked;
         }
         public List<CompanyBlocked> GetAllCompanyBlocked() => _companyBlocked.Find<CompanyBlocked>(companyBlocked => true).ToList();
-
         public CompanyBlocked GetCompanyBlocked(string cnpj) => _companyBlocked.Find<CompanyBlocked>(companyBlocked => companyBlocked.CNPJ == cnpj).FirstOrDefault();
         public void RemoveCompanyBlocked(CompanyBlocked companyIn) => _companyBlocked.DeleteOne(companyBlocked => companyBlocked.CNPJ == companyIn.CNPJ);
     }

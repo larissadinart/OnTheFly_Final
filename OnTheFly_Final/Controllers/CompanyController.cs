@@ -25,7 +25,7 @@ namespace OnTheFly_Final.Controllers
             _addressServices = addressServices;
         }
 
-        [HttpPost]
+        [HttpPost("{cnpj:length(18)}")]
         public ActionResult<Company> CreateCompany(Company company)
         {
             var cep = company.Address.ZipCode;
@@ -46,7 +46,6 @@ namespace OnTheFly_Final.Controllers
             else
             {
                 var Cnpj = company.CNPJ;
-                //var Cnpj = companyUtils.FormatCNPJ(company.CNPJ);
                 company.CNPJ = Cnpj.Substring(0, 2).ToString() + "." + Cnpj.Substring(2, 3).ToString() + "." + Cnpj.Substring(5, 3).ToString() + '/' + Cnpj.Substring(8, 4).ToString() + "-" + Cnpj.Substring(12, 2).ToString();
                 
                 var comp = _companyServices.GetCompany(company.CNPJ);
@@ -89,33 +88,47 @@ namespace OnTheFly_Final.Controllers
             var company = _companyServices.GetCompany(cnpj);
 
             if (company == null)
-                return NotFound("Something went wrong in the request, company not found!");
+                if (company == null) 
+                    return NotFound("Algo deu errado na requisição, companhia não encontrada!");
 
             return Ok(company);
         }
 
 
         [HttpPut]
-        public ActionResult<Company> PutCompany(string cnpj, string nameOpt, bool status)
+        public ActionResult<Company> PutCompany([FromQuery] string cnpj, string nameOpt, bool status, string cep, int number, string complement)
         {
-            Company companyIn = new() { CNPJ = cnpj, NameOpt = nameOpt, Status = status};
-            if (companyUtils.IsCnpjValid(companyIn.CNPJ) == false)
-                return BadRequest("CNPJ inválido!");
+            var address = _addressServices.GetAdress(cep).Result;
+            if (address == null)
+                return NotFound("Endereço não encontrado!");
+            else
+            {
+                Company companyIn = new() { CNPJ = cnpj, NameOpt = nameOpt, Status = status };
 
-            var company = _companyServices.GetCompany(cnpj);
-            if (company == null) return NotFound("Something went wrong in the request, company not found!");
+                if (companyUtils.IsCnpjValid(companyIn.CNPJ) == false)
+                    return BadRequest("CNPJ inválido!");
 
-            companyIn.CNPJ = cnpj;
-            _companyServices.UpdateCompany(companyIn.CNPJ, companyIn);
-            return NoContent();
+                var company = _companyServices.GetCompany(cnpj);
+                if (company == null) return NotFound("Algo deu errado na requisição, companhia não encontrada!");
+                companyIn.Name = company.Name;
+                companyIn.Address = address;
+                companyIn.Address.Number = number;
+                companyIn.Address.Complement = complement;
+
+                _companyServices.UpdateCompany(companyIn, cnpj);
+                return NoContent();
+            }
         }
 
         [HttpDelete]
         public ActionResult<Company> DeleteCompany(string cnpj)
         {
+            cnpj = cnpj.Trim();
+            cnpj = cnpj.Replace("%2F", "/");
+
             var company = _companyServices.GetCompany(cnpj);
             if (company == null)
-                return NotFound("Something went wrong in the request, company not found!");
+                return NotFound("Algo deu errado na requisição, companhia não encontrada!");
 
             CompanyGarbage companyGarbage = new()
             {
@@ -123,15 +136,14 @@ namespace OnTheFly_Final.Controllers
                 Name = company.Name,
                 NameOpt = company.NameOpt,
                 DtOpen = company.DtOpen,
-                Status = company.Status
+                Status = company.Status,
+                Address = company.Address
             };
-
-            _companyServices.RemoveCompany(company);
 
             _companyGarbageServices.CreateCompanyGarbage(companyGarbage);
 
+            _companyServices.RemoveCompany(company);
             return NoContent();
         }
     }
 }
-

@@ -15,17 +15,15 @@ namespace OnTheFly_Final.Services
             _company = database.GetCollection<Company>(settings.CompanyCollectionName);
 
         }
-
         public Company CreateCompany(Company company)
         {
             _company.InsertOne(company);
             return company;
         }
-
         public List<Company> GetAllCompany() => _company.Find<Company>(company => true).ToList();
 
         public Company GetCompany(string cnpj) => _company.Find<Company>(company => company.CNPJ == cnpj).FirstOrDefault();
-        public void UpdateCompany(string cnpj, Company companyIn)
+        public void UpdateCompany(Company companyIn, string cnpj)
         {
             _company.ReplaceOne(company => company.CNPJ == cnpj, companyIn);
         }

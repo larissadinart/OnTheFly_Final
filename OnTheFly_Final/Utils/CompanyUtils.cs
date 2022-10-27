@@ -52,11 +52,6 @@ namespace OnTheFly_Final.Utils
             digito = digito + resto.ToString();
             return cnpj.EndsWith(digito);
         }
-
-        public string FormatCNPJ(string cnpj)
-        {
-            return Convert.ToUInt64(cnpj).ToString(@"00\.000\.000\/0000\-00");
-        }
     }
 }
 

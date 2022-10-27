@@ -42,7 +42,6 @@ namespace OnTheFly_Final
             services.AddSingleton<CompanyGarbageServices>();
             services.AddSingleton<CompanyBlockedServices>();
             services.AddSingleton<AddressServices>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
