@@ -16,10 +16,10 @@ namespace OnTheFly_Final.Controllers
             _addressServices = addressServices;
         }
 
-        [HttpGet("{ZipCode}")]
-        public ActionResult<string> GetAddress(string cep)
+        [HttpGet("{zipCode}")]
+        public ActionResult<string> GetAddress(string zipCode)
         {
-            var address = _addressServices.GetAddress(cep);
+            var address = _addressServices.GetAddress(zipCode);
 
             if (address == null) return NotFound();
 

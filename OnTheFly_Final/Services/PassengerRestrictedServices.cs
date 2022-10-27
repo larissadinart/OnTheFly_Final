@@ -11,8 +11,8 @@ namespace OnTheFly_Final.Services
 
         public PassengerRestrictedServices(IDataBaseSettings settings)
         {
-            var passengerRestricted = new MongoClient(settings.ConnectionString);
-            var database = passengerRestricted.GetDatabase(settings.PassengerDataBaseName);
+            var passenger = new MongoClient(settings.ConnectionString);
+            var database = passenger.GetDatabase(settings.PassengerDataBaseName);
             _passengerRestrictedServices = database.GetCollection<PassengerRestricted>(settings.PassengerRestrictedCollectionName);
         }
 
@@ -21,7 +21,7 @@ namespace OnTheFly_Final.Services
             _passengerRestrictedServices.InsertOne(passengerRestricted);
             return passengerRestricted;
         }
-        public List<PassengerRestricted> GetAllPassengersRestricteds() => _passengerRestrictedServices.Find(passengerRestrcited => true).ToList();
-        public PassengerRestricted GetPassengerRestricted(string cpf) => _passengerRestrictedServices.Find<PassengerRestricted>(passengerRestrcited => passengerRestrcited.CPF == cpf).FirstOrDefault();
+        public List<PassengerRestricted> GetAllPassengersRestricteds() => _passengerRestrictedServices.Find(passengerRestricted => true).ToList();
+        public PassengerRestricted GetPassengerRestricted(string cpf) => _passengerRestrictedServices.Find<PassengerRestricted>(passengerRestricted => passengerRestricted.CPF == cpf).FirstOrDefault();
     }
 }

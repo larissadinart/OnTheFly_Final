@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using MongoDB.Driver;
+using Newtonsoft.Json;
 using OnTheFly_Final.Models;
 using OnTheFly_Final.Utils;
 
@@ -10,6 +11,11 @@ namespace OnTheFly_Final.Services
     public class AddressServices
     {
         private readonly IMongoCollection<Address> _address;
+
+        public AddressServices()
+        {
+
+        }
         public AddressServices(IDataBaseSettings settings)
         {
             var address = new MongoClient(settings.ConnectionString);
@@ -17,7 +23,7 @@ namespace OnTheFly_Final.Services
             _address = database.GetCollection<Address>(settings.AddressCollectionName);
 
         }
-        public string GetAddress(string cep) //método utilizado para executar uma requisição web
+        public Address GetAddress(string cep) //método utilizado para executar uma requisição web
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://viacep.com.br/ws/" + cep + "/json/"); //url
             request.AllowAutoRedirect = false;
@@ -26,7 +32,7 @@ namespace OnTheFly_Final.Services
             if (stream == null) return null;
             StreamReader answerReader = new StreamReader(stream);
             string message = answerReader.ReadToEnd();
-            return message;
+            return JsonConvert.DeserializeObject<Address>(message);
         }
         public Address Create(Address address)
         {

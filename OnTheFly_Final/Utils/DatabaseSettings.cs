@@ -2,11 +2,13 @@
 {
     public class DataBaseSettings : IDataBaseSettings
     {
+        public string SalesCollectionName { get; set; }
         public string PassengerCollectionName { get; set; }
-        public string PassengerCollectionGarbage { get; set; }
-        public string PassengerCollectionRestricted { get; set; }
+        public string PassengerGarbageCollectionName { get; set; }
+        public string PassengerRestrictedCollectionName { get; set; }
+        public string AddressCollectionName { get; set; }
         public string ConnectionString { get; set; }
-        public string DataBaseName { get; set; }
+        public string PassengerDataBaseName { get; set; }
 
     }
 }

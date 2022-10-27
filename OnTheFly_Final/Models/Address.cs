@@ -2,23 +2,38 @@
 using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 
 namespace OnTheFly_Final.Models
 {
     [BsonIgnoreExtraElements]
     public class Address
     {
-        [Required(ErrorMessage = "Campo Zipcode é obrigatório!"),StringLength(9, ErrorMessage = "Campo Zipcode inválido!")]
+        [Required]
+        [StringLength(9, ErrorMessage = "Campo Zipcode inválido!")]
+        [JsonProperty("cep")]
         public String ZipCode { get; set; }
-        [Required(ErrorMessage = "Campo Street é obrigatório!"), StringLength(100, ErrorMessage = "Campo Street inválido!")]
+
+        [StringLength(100, ErrorMessage = "Campo Street inválido!")]
+        [JsonProperty("logradouro")]
         public String Street { get; set; }
-        [Required(ErrorMessage = "Campo Number é obrigatório!")]
+
+        [StringLength(30)]
+        [JsonProperty("bairro")]
+        public String District { get; set; }
+
+        [Required]
         public int Number { get; set; }
-        [StringLength(10),Required(ErrorMessage = "Campo Complement inválido!")]
+
+        [StringLength(10)]
         public String Complement { get; set; }
-        [StringLength(30),Required(ErrorMessage = "Campo City inválido!")]
+
+        [StringLength(30)]
+        [JsonProperty("localidade")]
         public String City { get; set; }
-        [StringLength(2),Required(ErrorMessage = "Campo State inválido!")]
+
+        [StringLength(2)]
+        [JsonProperty("uf")]
         public String State { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using OnTheFly_Final.Models;
 using OnTheFly_Final.Services;
 
@@ -50,6 +51,8 @@ namespace OnTheFly_Final.Controllers
                 }return Ok(pass);
             }
         }
+        [HttpGet]
+        public ActionResult<List<PassengerGarbage>> GetAllPassengersGarbage() => _passengerGarbageServices.GetAllPassengersGarbage();
 
 
 

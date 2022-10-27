@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using System.Collections.Generic;
+using MongoDB.Driver;
 using OnTheFly_Final.Models;
 using OnTheFly_Final.Utils;
 
@@ -12,7 +13,7 @@ namespace OnTheFly_Final.Services
         {
             var passenger = new MongoClient(settings.ConnectionString);
             var database = passenger.GetDatabase(settings.PassengerDataBaseName);
-            _passengerGarbageServices = database.GetCollection<PassengerGarbage>(settings.PassengerGarbageCollectionName);
+            _passengerGarbageServices = database.GetCollection<PassengerGarbage>(settings.PassengerRestrictedCollectionName);
         }
 
         public PassengerGarbage CreatePassengerGarbage(PassengerGarbage passengerGarbage)
@@ -22,5 +23,6 @@ namespace OnTheFly_Final.Services
         }
         public PassengerGarbage GetPassengerGarbage(string cpf) => _passengerGarbageServices.Find<PassengerGarbage>(passengerGarbage => passengerGarbage.CPF == cpf).FirstOrDefault();
 
+        public List<PassengerGarbage> GetAllPassengersGarbage() => _passengerGarbageServices.Find(passengerGarbage => true).ToList();
     }
 }
