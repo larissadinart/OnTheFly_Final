@@ -26,7 +26,7 @@ namespace OnTheFly_Final.Models
         public int Number { get; set; }
 
         [StringLength(10)]
-        public String Complement { get; set; }
+        public String? Complement { get; set; }
 
         [StringLength(30)]
         [JsonProperty("localidade")]

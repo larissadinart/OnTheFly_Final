@@ -1,4 +1,6 @@
-﻿namespace OnTheFly_Final.Utils
+﻿using OnTheFly_Final.Utils.Data;
+
+namespace OnTheFly_Final.Utils
 {
     public class DataBaseSettings : IDataBaseSettings
     {

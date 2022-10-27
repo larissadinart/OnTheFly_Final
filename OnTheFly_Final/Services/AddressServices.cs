@@ -4,7 +4,7 @@ using System.Net;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using OnTheFly_Final.Models;
-using OnTheFly_Final.Utils;
+using OnTheFly_Final.Utils.Data;
 
 namespace OnTheFly_Final.Services
 {
@@ -19,11 +19,11 @@ namespace OnTheFly_Final.Services
         public AddressServices(IDataBaseSettings settings)
         {
             var address = new MongoClient(settings.ConnectionString);
-            var database = address.GetDatabase(settings.PassengerDataBaseName); //objeto vazio
+            var database = address.GetDatabase(settings.PassengerDataBaseName); 
             _address = database.GetCollection<Address>(settings.AddressCollectionName);
 
         }
-        public Address GetAddress(string cep) //método utilizado para executar uma requisição web
+        public Address GetAddress(string cep) 
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://viacep.com.br/ws/" + cep + "/json/"); //url
             request.AllowAutoRedirect = false;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using OnTheFly_Final.Models;
 using OnTheFly_Final.Services;
+using OnTheFly_Final.Utils;
 
 namespace OnTheFly_Final.Controllers
 {
@@ -26,7 +27,7 @@ namespace OnTheFly_Final.Controllers
 
 
         [HttpGet("{cpf}", Name = "GetCpf")]
-        public ActionResult<Passenger> GetPassengerCpf(string cpf) 
+        public ActionResult<Passenger> GetPassengerCpf(string cpf)
         {
             var pass = _passengerServices.GetPassenger(cpf);
             if (pass == null)
@@ -37,7 +38,7 @@ namespace OnTheFly_Final.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Passenger> PostPassenger(string cpf, string district,string name, char gender, string phone, DateTime dtBirth, string zip, string street, int number, string compl, string city, string state  )
+        public ActionResult<Passenger> PostPassenger(string cpf, string name, char gender, string phone, DateTime dtBirth, string zip, string street, string district, int number, string compl, string city, string state)
         {
             var passenger = new Passenger
             {
@@ -49,14 +50,13 @@ namespace OnTheFly_Final.Controllers
                 Status = true,
                 DtRegister = DateTime.Now,
                 Address = new AddressServices().GetAddress(zip)
-
             };
 
-            if (ValidarCpf(passenger.CPF) == false)
+            if (PassengerUtil.ValidateCpf(passenger.CPF) == false)
             {
-                NotFound();
+                return BadRequest("CPF inválido!");
             }
-            else if (passenger.CPF == null)
+            else if (passenger.CPF == null) 
             {
                 passenger.Address = new Address
                 {
@@ -74,14 +74,13 @@ namespace OnTheFly_Final.Controllers
                 passenger.Address.Complement = compl;
                 passenger.Address.Number = number;
             }
-
             _addressServices.Create(passenger.Address);
             _passengerServices.CreatePassenger(passenger);
             return CreatedAtRoute("GetCpf", new { CPF = passenger.CPF.ToString() }, passenger);
         }
 
         [HttpPut]
-        public ActionResult<Passenger> PutPassenger([FromQuery] string cpf, string name, char gender, string phone, bool status) //nao esta encontrando o objeto no banco
+        public ActionResult<Passenger> PutPassenger([FromQuery] string cpf, string name, char gender, string phone, string zip, string street, string district, int number, string compl, string city, string state,bool status) //nao esta encontrando o objeto no banco
         {
             var pass = _passengerServices.GetPassenger(cpf);
 
@@ -91,9 +90,30 @@ namespace OnTheFly_Final.Controllers
             }
             else
             {
-                Passenger passengerIn = new() { CPF = pass.CPF, Name = name, Gender = gender, Phone = phone, DtBirth = pass.DtBirth, DtRegister = pass.DtRegister, Address = pass.Address, Status = status};
-                _passengerServices.UpdatePassenger(passengerIn, cpf);
-                pass = _passengerServices.GetPassenger(cpf);
+                var passenger = new Passenger
+                {
+                    CPF = pass.CPF
+                };
+                if (passenger.CPF == null)
+                {
+                    return BadRequest("CPF não encontrado!");
+                }
+                else
+                {
+                    Passenger passengerIn = new()
+                    {
+                        CPF = passenger.CPF,
+                        Name = name,
+                        Gender = gender,
+                        Phone = phone,
+                        DtBirth = pass.DtBirth,
+                        DtRegister = pass.DtRegister,
+                        Status = status,
+                        Address = new AddressServices().GetAddress(zip)
+                    };
+                    _passengerServices.UpdatePassenger(passengerIn, cpf);
+                    pass = _passengerServices.GetPassenger(cpf);
+                }
                 return Ok(pass);
             }
         }
@@ -125,42 +145,6 @@ namespace OnTheFly_Final.Controllers
 
             }
             return NoContent();
-        }
-
-        public bool ValidarCpf(string cpf)
-        {
-            int[] multiplicador1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
-            int[] multiplicador2 = new int[10] { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
-            string tempCpf;
-            string digito;
-            int soma;
-            int resto;
-            cpf = cpf.Trim();
-            cpf = cpf.Replace(".", "").Replace("-", "");
-            if (cpf.Length != 11)
-                return false;
-            tempCpf = cpf.Substring(0, 9);
-            soma = 0;
-
-            for (int i = 0; i < 9; i++)
-                soma += int.Parse(tempCpf[i].ToString()) * multiplicador1[i];
-            resto = soma % 11;
-            if (resto < 2)
-                resto = 0;
-            else
-                resto = 11 - resto;
-            digito = resto.ToString();
-            tempCpf = tempCpf + digito;
-            soma = 0;
-            for (int i = 0; i < 10; i++)
-                soma += int.Parse(tempCpf[i].ToString()) * multiplicador2[i];
-            resto = soma % 11;
-            if (resto < 2)
-                resto = 0;
-            else
-                resto = 11 - resto;
-            digito = digito + resto.ToString();
-            return cpf.EndsWith(digito);
         }
 
 

@@ -2,7 +2,7 @@
 using System.Linq;
 using MongoDB.Driver;
 using OnTheFly_Final.Models;
-using OnTheFly_Final.Utils;
+using OnTheFly_Final.Utils.Data;
 
 namespace OnTheFly_Final.Services
 {
