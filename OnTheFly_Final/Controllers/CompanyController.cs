@@ -2,20 +2,43 @@
 using Microsoft.AspNetCore.Mvc;
 using OnTheFly_Final.Models;
 using OnTheFly_Final.Services;
+using System;
 using System.Collections.Generic;
 
 namespace OnTheFly_Final.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CompanyControllers : ControllerBase
+    public class CompanyController : ControllerBase
     {
         private readonly CompanyServices _companyServices;
         private readonly CompanyGarbageServices _companyGarbageServices;
-        public CompanyControllers(CompanyServices companyServices, CompanyGarbageServices companyGarbageServices)
+        private readonly CompanyBlockedServices _companyBlockedServices;
+
+        public CompanyController(CompanyServices companyServices, CompanyGarbageServices companyGarbageServices, CompanyBlockedServices companyBlockedServices)
         {
             _companyServices = companyServices;
             _companyGarbageServices = companyGarbageServices;
+            _companyBlockedServices = companyBlockedServices;
+        }
+
+        [HttpPost]
+        public ActionResult<Company> CreateCompany(Company company)
+        {
+            string cnpj = company.CNPJ;
+            if(cnpj.Length < 14)
+            {
+                return NotFound("CNPJ inválido!");
+            }
+            company.CNPJ = cnpj.Substring(0, 2).ToString() + "." + cnpj.Substring(2, 3).ToString() + "." + cnpj.Substring(5, 3).ToString() + "/" + cnpj.Substring(8, 4).ToString() + "-" + cnpj.Substring(12, 2).ToString();
+            DateTime date = company.DtOpen;
+            date = DateTime.Parse(date.ToShortDateString());
+            if(company.NameOpt == null)
+            {
+                company.NameOpt = company.Name;
+            }
+            _companyServices.CreateCompany(company);
+            return CreatedAtRoute("GetCompany", new { cnpj = company.CNPJ.ToString() }, company);
         }
 
         [HttpGet]
@@ -27,19 +50,13 @@ namespace OnTheFly_Final.Controllers
         {
             var company = _companyServices.GetCompany(cnpj);
 
-            if (company == null) 
+            if (company == null)
                 return NotFound("Something went wrong in the request, company not found!");
 
             return Ok(company);
 
         }
-        [HttpPost("{cnpj:length(19)}")]
-        public ActionResult<Company> CreateCompany(Company company)
-        {
-            _companyServices.CreateCompany(company);
-            return CreatedAtRoute("GetOneCompany", new { cnpj = company.CNPJ.ToString() }, company);
 
-        }
 
         [HttpPut]
         public ActionResult<Company> PutCompany(Company companyIn, string cnpj)
@@ -56,7 +73,7 @@ namespace OnTheFly_Final.Controllers
         public ActionResult<Company> DeleteCompany(string cnpj)
         {
             var company = _companyServices.GetCompany(cnpj);
-            if (company == null) 
+            if (company == null)
                 return NotFound("Something went wrong in the request, company not found!");
 
             CompanyGarbage companyGarbage = new CompanyGarbage();
@@ -73,7 +90,6 @@ namespace OnTheFly_Final.Controllers
 
             return NoContent();
         }
-
     }
 }
 

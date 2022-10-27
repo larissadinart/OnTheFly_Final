@@ -8,7 +8,6 @@ namespace OnTheFly_Final.Services
     public class CompanyServices
     {
         private readonly IMongoCollection<Company> _company;
-
         public CompanyServices(IDataBaseSettings settings)
         {
             var company = new MongoClient(settings.ConnectionString);

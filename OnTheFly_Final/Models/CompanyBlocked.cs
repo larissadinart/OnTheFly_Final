@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace OnTheFly_Final.Models
 {
     [BsonIgnoreExtraElements]
-    public class Company
+    public class CompanyBlocked
     {
         [Required(ErrorMessage = "Este campo é obrigatório!")]
         [StringLength(19, ErrorMessage = "Número de CNPJ inválido")]
@@ -16,7 +16,7 @@ namespace OnTheFly_Final.Models
         [StringLength(30, ErrorMessage = "Nome inválido")]
         public string Name { get; set; }
 
-
+        [Required(ErrorMessage = "Este campo é obrigatório!")]
         [StringLength(30, ErrorMessage = "Nome inválido")]
         public string NameOpt { get; set; }
 
@@ -24,11 +24,8 @@ namespace OnTheFly_Final.Models
         [Required(ErrorMessage = "Este campo é obrigatório!")]
         public DateTime DtOpen { get; set; }
 
-        public bool ? Status { get; set; }
+        public bool? Status { get; set; }
+        //public Address Address
 
-        //[Required(ErrorMessage = "Este campo é obrigatório!")]
-        //public Address Address { get; set; }
-        //[Required(ErrorMessage = "Este campo é obrigatório!")]
-        //public List<Airplane> Airplanes { get; set; }
     }
 }

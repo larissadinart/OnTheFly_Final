@@ -6,14 +6,14 @@ using System.Collections.Generic;
 
 namespace OnTheFly_Final.Controllers
 {
-    [Route("api/[controllers]")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class CompanyGarbageControllers : ControllerBase
+    public class CompanyGarbageController : ControllerBase
     {
         private readonly CompanyGarbageServices _companyGarbageServices;
         private readonly CompanyServices _companyServices;
 
-        public CompanyGarbageControllers(CompanyGarbageServices companyGarbageServices, CompanyServices companyServices)
+        public CompanyGarbageController(CompanyGarbageServices companyGarbageServices, CompanyServices companyServices)
         {
             _companyGarbageServices = companyGarbageServices;
             _companyServices = companyServices;
