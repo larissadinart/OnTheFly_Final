@@ -41,6 +41,7 @@ namespace OnTheFly_Final
             services.AddSingleton<CompanyServices>();
             services.AddSingleton<CompanyGarbageServices>();
             services.AddSingleton<CompanyBlockedServices>();
+            services.AddSingleton<AddressServices>();
 
         }
 

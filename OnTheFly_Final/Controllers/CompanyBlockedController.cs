@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnTheFly_Final.Models;
 using OnTheFly_Final.Services;
+using System;
 using System.Collections.Generic;
 
 namespace OnTheFly_Final.Controllers
@@ -48,5 +49,6 @@ namespace OnTheFly_Final.Controllers
             _companyServices.UpdateCompany(cnpj, company);
             return Ok(companyBlocked);
         }
+       
     }
 }

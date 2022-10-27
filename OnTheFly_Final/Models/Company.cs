@@ -8,7 +8,7 @@ namespace OnTheFly_Final.Models
     public class Company
     {
         [Required(ErrorMessage = "Este campo é obrigatório!")]
-        [StringLength(19, ErrorMessage = "Número de CNPJ inválido")]
+        [StringLength(18, ErrorMessage = "Número de CNPJ inválido")]
         public string CNPJ { get; set; }
 
 
@@ -26,8 +26,9 @@ namespace OnTheFly_Final.Models
 
         public bool ? Status { get; set; }
 
-        //[Required(ErrorMessage = "Este campo é obrigatório!")]
-        //public Address Address { get; set; }
+        [Required(ErrorMessage = "Este campo é obrigatório!")]
+        public Address Address { get; set; }
+
         //[Required(ErrorMessage = "Este campo é obrigatório!")]
         //public List<Airplane> Airplanes { get; set; }
     }
