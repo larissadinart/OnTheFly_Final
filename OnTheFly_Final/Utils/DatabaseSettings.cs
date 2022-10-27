@@ -8,6 +8,7 @@
         public string AircraftCollectionName { get; set; }
         public string PassengerCollectionGarbage { get; set; }
         public string PassengerCollectionRestricted { get; set; }
+        public string AircraftGarbageCollectionName { get; set; }
         public string AirportCollectionName { get; set; }   
         public string ConnectionString { get; set; }
         public string AircraftDatabaseName { get; set; }

@@ -1,15 +1,14 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel.DataAnnotations;
-using MongoDB.Bson.Serialization.Attributes;
+using System;
 
 namespace OnTheFly_Final.Models
 {
-    public class Aircraft
+    [BsonIgnoreExtraElements]
+
+    public class AircraftGarbage
     {
 
-        [BsonId]
-        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string Id { get; set; }
         [Required(ErrorMessage = "Este campo é obrigatório!"), StringLength(6, ErrorMessage = "RAB inválido!")]
         public string RAB { get; set; }
         [Required(ErrorMessage = "Este campo é obrigatório!")]
@@ -19,10 +18,11 @@ namespace OnTheFly_Final.Models
         public DateTime DtLastFlight { get; set; }
         //  [Required(ErrorMessage = "Este campo é obrigatório!"), StringLength(19, ErrorMessage = "CNPJ inválido!")]
         // public Company Company{ get; set; }
-        public Aircraft()
+        public AircraftGarbage()
         {
             DtRegistry = DateTime.Now;
             this.DtLastFlight = DtRegistry;
         }
     }
 }
+

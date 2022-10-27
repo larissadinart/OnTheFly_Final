@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using OnTheFly_Final.Services;
 using OnTheFly_Final.Utils;
 
@@ -37,12 +39,13 @@ namespace OnTheFly_Final
             });
             services.Configure<DataBaseSettings>(Configuration.GetSection(nameof(DataBaseSettings)));
             IServiceCollection serviceCollection = services.AddSingleton<IDataBaseSettings>(sp => sp.GetRequiredService<IOptions<DataBaseSettings>>().Value);
+            BsonSerializer.RegisterSerializer(typeof(DateTime), DateTimeSerializer.LocalInstance);
             services.AddSingleton<PassengerServices>();
             services.AddSingleton<AircraftServices>();
+            services.AddSingleton<AircraftGarbageServices>();
             services.AddSingleton<AirportServices>();
             services.AddSingleton<FlightsServices>();
             services.AddSingleton<SalesServices>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

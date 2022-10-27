@@ -8,28 +8,28 @@ namespace OnTheFly_Final.Services
 {
     public class AircraftServices
     {
-        private readonly IMongoCollection<AirCraft> _aircraft;
+        private readonly IMongoCollection<Aircraft> _aircraft;
 
         public AircraftServices(IDataBaseSettings settings)
         {
             var aircraft = new MongoClient(settings.ConnectionString);
             var database = aircraft.GetDatabase(settings.AircraftDatabaseName);
-            _aircraft = database.GetCollection<AirCraft>(settings.AircraftCollectionName);
+            _aircraft = database.GetCollection<Aircraft>(settings.AircraftCollectionName);
         }
 
-        public AirCraft CreateAircraft(AirCraft aircraft)
+        public Aircraft CreateAircraft(Aircraft aircraft)
         {
             _aircraft.InsertOne(aircraft);
             return aircraft;
         }
 
-        public AirCraft GetAircraft(string rab) => _aircraft.Find<AirCraft>(aircraft => aircraft.RAB == rab).FirstOrDefault();
+        public Aircraft GetAircraft(string rab) => _aircraft.Find<Aircraft>(aircraft => aircraft.RAB == rab).FirstOrDefault();
 
-        public List<AirCraft> GetAllAircraft() => _aircraft.Find<AirCraft>(aircraft => true).ToList();
+        public List<Aircraft> GetAllAircraft() => _aircraft.Find<Aircraft>(aircraft => true).ToList();
 
-        public void UpdateAircraft(string rab, AirCraft aircraftIn) => _aircraft.ReplaceOne(aircraft => aircraft.RAB == rab, aircraftIn);
+        public void UpdateAircraft(string rab, Aircraft aircraftIn) => _aircraft.ReplaceOne(aircraft => aircraft.RAB == rab, aircraftIn);
 
-        public void RemoveAircraft(AirCraft aircraftIn)
+        public void RemoveAircraft(Aircraft aircraftIn)
         {
             _aircraft.DeleteOne(aircraft => aircraft.RAB == aircraftIn.RAB);
         }

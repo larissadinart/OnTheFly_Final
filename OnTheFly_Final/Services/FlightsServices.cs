@@ -22,11 +22,11 @@ namespace OnTheFly_Final.Services
             return flights;
         }
         public List<Flights> GetAllFlights() => _flight.Find(flights => true).ToList();
-        public Flights GetFlights(string destiny, DateTime dateTime) => _flight.Find<Flights>(flights => flights.Departure  == dateTime && flights.Destiny.IATA == destiny).FirstOrDefault();
+        public Flights GetFlights(string iata, DateTime dateTime) => _flight.Find<Flights>(flights => flights.Departure == dateTime && flights.Destiny.IATA == iata).FirstOrDefault();
 
-        public void UpdateFlights(Flights fligthsIn, string destiny, DateTime dateTime)
+        public void UpdateFlights(Flights fligthsIn)
         {
-            _flight.ReplaceOne(flights => flights.Departure == dateTime && flights.Destiny.IATA == destiny, fligthsIn);
+            _flight.ReplaceOne(flights => flights.Plane == fligthsIn.Plane, fligthsIn);
         }
        
     }

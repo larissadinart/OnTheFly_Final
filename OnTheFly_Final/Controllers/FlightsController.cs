@@ -24,9 +24,63 @@ namespace OnTheFly_Final.Controllers
         [HttpGet]
         public ActionResult<List<Flights>> GetAllFlights() => _flightsServices.GetAllFlights();
 
-        [HttpGet("{Date}", Name = "GetFlights")]
-        public ActionResult<Flights> GetFlights(string iata, DateTime date)
+
+
+
+        [HttpPost]
+        public ActionResult<Flights> PostFlights(string iata, DateTime date, string rab, double hours, double minutes)
         {
+            date = date.AddHours(hours - 3).AddMinutes(minutes);
+            iata = iata.ToUpper();
+            if (date < DateTime.Now)
+            {
+                return NotFound("Impossivel criar voo com data retroativa!");
+            }
+            else
+            {
+
+                var destiny = _airportServices.GetAirports(iata);
+                if (destiny == null)
+                {
+                    return NotFound("Destino nao encontrado!");
+                }
+                else
+                {
+
+
+                    var plane = _airCraftServices.GetAircraft(rab);
+
+                    if (plane == null)
+                    {
+                        return NotFound("Impossivel encontar Aeronave!");
+                    }
+                    else
+                    {
+                        //var restited = _airCraftServices.GetAircraftRestrited(plane.Company)
+                        //if (restited == true )
+                        //{
+                        //    return NotFound("Infelizmente essa Compania não pode cadastrar voos");
+                        //}
+                        //else
+                        //{
+
+                        Flights flights = new Flights() { Status = true, Plane = plane, Destiny = destiny, Departure = date };
+
+                        _flightsServices.CreateFlights(flights);
+                        return Ok(flights);
+                        //}
+                    }
+
+                }
+            }
+
+        }
+
+        [HttpGet("{date}", Name = "GetFlights")]
+        public ActionResult<Flights> GetFlights(string iata, DateTime date, double hours, double minutes)
+        {
+            date = date.AddHours(hours - 3).AddMinutes(minutes);
+            iata = iata.ToUpper();
             var destiny = _airportServices.GetAirports(iata);
             if (destiny == null)
             {
@@ -44,43 +98,32 @@ namespace OnTheFly_Final.Controllers
             }
         }
 
-        [HttpPost]
-        public ActionResult<Flights> PostFlights(Flights flights)
+        [HttpPut("{date}")]
+        public ActionResult<Flights> UpdateFlights(string iata, DateTime date, double hours, double minutes, bool status)
         {
-
-            var destiny = _airportServices.GetAirports(flights.Destiny.IATA);
+            date = date.AddHours(hours).AddMinutes(minutes);
+            iata = iata.ToUpper();
+            var destiny = _airportServices.GetAirports(iata);
             if (destiny == null)
             {
                 return NotFound();
             }
             else
             {
-                var plane = _airCraftServices.GetAircraft(flights.Plane.RAB);
-                if (plane == null)
+                var flight = _flightsServices.GetFlights(destiny.IATA, date);
+                if (flight == null)
                 {
                     return NotFound();
                 }
                 else
                 {
-                    _flightsServices.CreateFlights(flights);
-                    return Ok(flights);
+                flight.Status = status;
+                _flightsServices.UpdateFlights(flight);
+                return flight;
+
                 }
             }
 
-        }
-
-        [HttpPut("{Destiny}/{Date}")]
-        public Flights UpdatePassenger(string destiny, DateTime date, Flights flights)
-        {
-            var flight = _flightsServices.GetFlights(destiny, date);
-            if (flight == null)
-            {
-                return null;
-            }
-
-
-            _flightsServices.UpdateFlights(flights, destiny, date);
-            return flight;
 
         }
     }
