@@ -79,7 +79,7 @@ namespace OnTheFly_Final.Controllers
         [HttpGet("{date}", Name = "GetFlights")]
         public ActionResult<Flights> GetFlights(string iata, DateTime date, double hours, double minutes)
         {
-            date = date.AddHours(hours - 3).AddMinutes(minutes);
+            date = date.AddHours(hours - 3).AddMinutes(minutes); // ver esse horario no banco 
             iata = iata.ToUpper();
             var destiny = _airportServices.GetAirports(iata);
             if (destiny == null)
@@ -98,33 +98,33 @@ namespace OnTheFly_Final.Controllers
             }
         }
 
-        [HttpPut("{date}")]
-        public ActionResult<Flights> UpdateFlights(string iata, DateTime date, double hours, double minutes, bool status)
-        {
-            date = date.AddHours(hours).AddMinutes(minutes);
-            iata = iata.ToUpper();
-            var destiny = _airportServices.GetAirports(iata);
-            if (destiny == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                var flight = _flightsServices.GetFlights(destiny.IATA, date);
-                if (flight == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                flight.Status = status;
-                _flightsServices.UpdateFlights(flight);
-                return flight;
+        //[HttpPut("{date}")]
+        //public ActionResult<Flights> UpdateFlights(string iata, DateTime date, double hours, double minutes, bool status)
+        //{
+        //    date = date.AddHours(hours).AddMinutes(minutes);
+        //    iata = iata.ToUpper();
+        //    var destiny = _airportServices.GetAirports(iata);
+        //    if (destiny == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    else
+        //    {
+        //        var flight = _flightsServices.GetFlights(destiny.IATA, date);
+        //        if (flight == null)
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //        flight.Status = status;
+        //        _flightsServices.UpdateFlights(flight);
+        //        return flight;
 
-                }
-            }
+        //        }
+        //    }
 
 
-        }
+        //}
     }
 }

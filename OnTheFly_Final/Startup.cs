@@ -39,7 +39,7 @@ namespace OnTheFly_Final
             });
             services.Configure<DataBaseSettings>(Configuration.GetSection(nameof(DataBaseSettings)));
             IServiceCollection serviceCollection = services.AddSingleton<IDataBaseSettings>(sp => sp.GetRequiredService<IOptions<DataBaseSettings>>().Value);
-            BsonSerializer.RegisterSerializer(typeof(DateTime), DateTimeSerializer.LocalInstance);
+            //BsonSerializer.RegisterSerializer(typeof(DateTime), DateTimeSerializer.LocalInstance);
             services.AddSingleton<PassengerServices>();
             services.AddSingleton<AircraftServices>();
             services.AddSingleton<AircraftGarbageServices>();

@@ -26,8 +26,8 @@ namespace OnTheFly_Final.Services
 
         public void UpdateFlights(Flights fligthsIn)
         {
-            _flight.ReplaceOne(flights => flights.Plane == fligthsIn.Plane, fligthsIn);
+            _flight.ReplaceOne(flights => flights.Departure == fligthsIn.Departure && flights.Destiny.IATA == fligthsIn.Destiny.IATA, fligthsIn);
         }
-       
+
     }
 }
