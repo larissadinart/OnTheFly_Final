@@ -9,10 +9,10 @@ namespace OnTheFly_Final.Services
     {
         private readonly IMongoCollection<AircraftGarbage> _aircraftGarbage;
 
-        public AircraftGarbageServices(IDatabaseSettings settings)
+        public AircraftGarbageServices(IDataBaseSettings settings)
         {
             var aircraft = new MongoClient(settings.ConnectionString);
-            var database = aircraft.GetDatabase(settings.AircraftDatabaseName);
+            var database = aircraft.GetDatabase(settings.AircraftDataBaseName);
             _aircraftGarbage = database.GetCollection<AircraftGarbage>(settings.AircraftGarbageCollectionName);
         }
 

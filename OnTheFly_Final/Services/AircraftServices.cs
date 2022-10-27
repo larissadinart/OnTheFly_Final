@@ -10,17 +10,16 @@ namespace OnTheFly_Final.Services
     {
         private readonly IMongoCollection<Aircraft> _aircraft;
 
-        public AircraftServices(IDatabaseSettings settings)
+        public AircraftServices(IDataBaseSettings settings)
         {
             var aircraft = new MongoClient(settings.ConnectionString);
-            var database = aircraft.GetDatabase(settings.AircraftDatabaseName);
+            var database = aircraft.GetDatabase(settings.AircraftDataBaseName);
             _aircraft = database.GetCollection<Aircraft>(settings.AircraftCollectionName);
         }
 
         public Aircraft CreateAircraft(Aircraft aircraft)
         {
             string test = aircraft.RAB;
-            aircraft.RAB = test.Substring(0, 2) + "-" + test.Substring(2, 3);
             _aircraft.InsertOne(aircraft);
             return aircraft;
         }
@@ -32,14 +31,12 @@ namespace OnTheFly_Final.Services
         public void UpdateAircraft(string rab, Aircraft aircraft)
         {
             string test = aircraft.RAB;
-          //  aircraft.RAB = test.Substring(0, 2) + "-" + test.Substring(2, 3);
             _aircraft.ReplaceOne(aircraft => aircraft.RAB == rab, aircraft);
         }
 
         public void RemoveAircraft(Aircraft aircraft)
         {
             string test = aircraft.RAB;
-            //aircraft.RAB = test.Substring(0, 2) + "-" + test.Substring(2, 3);
             _aircraft.DeleteOne(aircraft => aircraft.RAB == test);
         }
     }

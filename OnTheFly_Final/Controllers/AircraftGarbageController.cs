@@ -8,11 +8,11 @@ namespace OnTheFly_Final.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AircraftGarbageControllers : ControllerBase
+    public class AircraftGarbageController : ControllerBase
     {
         private readonly AircraftGarbageServices _aircraftGarbageServices;
         private readonly AircraftServices _aircraftServices;
-        public AircraftGarbageControllers(AircraftGarbageServices aircraftGarbageServices, AircraftServices aircraftServices)
+        public AircraftGarbageController(AircraftGarbageServices aircraftGarbageServices, AircraftServices aircraftServices)
         {
             _aircraftGarbageServices = aircraftGarbageServices;
             _aircraftServices = aircraftServices;

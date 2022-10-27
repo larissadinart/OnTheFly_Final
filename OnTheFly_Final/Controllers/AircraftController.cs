@@ -15,16 +15,21 @@ namespace OnTheFly_Final.Controllers
         ValidationAircraft validation = new ValidationAircraft();
         private readonly AircraftServices _aircraftServices;
         private readonly AircraftGarbageServices _aircraftGarbageServices;
+        private readonly CompanyServices _companyServices;
 
-        public AircraftController(AircraftServices aircraftServices, AircraftGarbageServices aircraftGarbageServices)
+        public AircraftController(AircraftServices aircraftServices, AircraftGarbageServices aircraftGarbageServices, CompanyServices companyServices)
         {
             _aircraftServices = aircraftServices;
             _aircraftGarbageServices = aircraftGarbageServices;
+            _companyServices = companyServices;
         }
 
         [HttpPost]
-        public ActionResult<Aircraft> PostAircraft(Aircraft aircraft)
+        public ActionResult<Aircraft> PostAircraft(string cnpj, int capacity,string registration)
         {
+            Aircraft aircraft = new Aircraft() { Capacity=capacity, RAB= registration, DtLastFlight=System.DateTime.Now, DtRegistry= System.DateTime.Now };
+            Company company = _companyServices.GetCompany(cnpj);
+            aircraft.Company = company;
             aircraft.RAB = aircraft.RAB.ToLower();
             var rab = validation.RabValidation(aircraft.RAB);
             if (rab != aircraft.RAB)
@@ -32,6 +37,8 @@ namespace OnTheFly_Final.Controllers
             aircraft.RAB = rab.Substring(0, 2) + "-" + rab.Substring(2, 3);
             var plane = _aircraftServices.GetAircraft(aircraft.RAB);
             if (plane != null) return NotFound("Aeronave já cadastrada!");
+
+
 
             _aircraftServices.CreateAircraft(aircraft);
             return CreatedAtRoute("GetAircraft", new { rab = aircraft.RAB.ToString() }, aircraft);
@@ -68,9 +75,9 @@ namespace OnTheFly_Final.Controllers
         public ActionResult<Aircraft> DeleteAircraft(string rab)
         {
             rab = rab.ToLower();
-          var aircraftIn= rab.Substring(0, 2) + "-" + rab.Substring(2, 3);
-          //  Aircraft aircraftIn = _aircraftServices.GetAircraft(rab);
-                //aircraftIn.RAB.ToLower();
+            var aircraftIn = rab.Substring(0, 2) + "-" + rab.Substring(2, 3);
+            //  Aircraft aircraftIn = _aircraftServices.GetAircraft(rab);
+            //aircraftIn.RAB.ToLower();
             var aircraft = _aircraftServices.GetAircraft(aircraftIn);
             if (aircraft == null) return NotFound("Aeronave não encontrada");
 

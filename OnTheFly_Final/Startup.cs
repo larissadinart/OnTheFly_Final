@@ -35,12 +35,13 @@ namespace OnTheFly_Final
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "OnTheFly_Final", Version = "v1" });
             });
-            services.Configure<DatabaseSettings>(Configuration.GetSection(nameof(DatabaseSettings)));
-            services.AddSingleton<IDatabaseSettings>(sp => sp.GetRequiredService<IOptions<DatabaseSettings>>().Value);
+            services.Configure<DataBaseSettings>(Configuration.GetSection(nameof(DataBaseSettings)));
+            services.AddSingleton<IDataBaseSettings>(sp => sp.GetRequiredService<IOptions<DataBaseSettings>>().Value);
 
 
             services.AddSingleton<AircraftServices>();
             services.AddSingleton<AircraftGarbageServices>();
+            services.AddSingleton<CompanyServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
