@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using OnTheFly_Final.Models;
 using OnTheFly_Final.Services;
 using OnTheFly_Final.Utils;
+using System;
 using System.Collections.Generic;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -25,9 +27,9 @@ namespace OnTheFly_Final.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Aircraft> PostAircraft(string cnpj, int capacity,string registration)
+        public ActionResult<Aircraft> PostAircraft(string cnpj, int capacity, string registration)
         {
-            Aircraft aircraft = new Aircraft() { Capacity=capacity, RAB= registration, DtLastFlight=System.DateTime.Now, DtRegistry= System.DateTime.Now };
+            Aircraft aircraft = new Aircraft() { Capacity = capacity, RAB = registration, DtLastFlight = System.DateTime.Now, DtRegistry = System.DateTime.Now };
             Company company = _companyServices.GetCompany(cnpj);
             aircraft.Company = company;
             aircraft.RAB = aircraft.RAB.ToLower();
@@ -58,8 +60,16 @@ namespace OnTheFly_Final.Controllers
         public ActionResult<List<Aircraft>> GetAllAircraft() => _aircraftServices.GetAllAircraft();
 
         [HttpPut]
-        public ActionResult<Aircraft> PutAircraft(Aircraft aircraftIn, string rab)
+        public ActionResult<Aircraft> PutAircraft([FromQuery] string rab, DateTime dtLastFlight, string cnpj, int capacity)
         {
+            Aircraft aircraftIn = new Aircraft()
+            {
+                RAB = rab,
+                DtLastFlight = dtLastFlight,
+                Capacity = capacity
+            };
+            Company company = _companyServices.GetCompany(cnpj);
+            aircraftIn.Company = company;
             aircraftIn.RAB = aircraftIn.RAB.ToLower();
             var registration = validation.RabValidation(aircraftIn.RAB);
             if (registration != aircraftIn.RAB)
@@ -67,7 +77,8 @@ namespace OnTheFly_Final.Controllers
             aircraftIn.RAB = rab.Substring(0, 2) + "-" + rab.Substring(2, 3);
             var aircraft = _aircraftServices.GetAircraft(aircraftIn.RAB);
             if (aircraft == null) return NotFound("Não encontrado!");
-            //aircraftIn.RAB = rab;
+
+            aircraftIn.DtRegistry = aircraft.DtRegistry;
             _aircraftServices.UpdateAircraft(aircraft.RAB, aircraftIn);
             return NoContent();
         }
@@ -76,8 +87,7 @@ namespace OnTheFly_Final.Controllers
         {
             rab = rab.ToLower();
             var aircraftIn = rab.Substring(0, 2) + "-" + rab.Substring(2, 3);
-            //  Aircraft aircraftIn = _aircraftServices.GetAircraft(rab);
-            //aircraftIn.RAB.ToLower();
+
             var aircraft = _aircraftServices.GetAircraft(aircraftIn);
             if (aircraft == null) return NotFound("Aeronave não encontrada");
 
@@ -90,7 +100,7 @@ namespace OnTheFly_Final.Controllers
             aircraftGarbage.Capacity = aircraft.Capacity;
             aircraftGarbage.DtRegistry = aircraft.DtRegistry;
             aircraftGarbage.DtLastFlight = aircraft.DtLastFlight;
-            //aircraftGarbage.Company=aircraft.Company;
+            aircraftGarbage.Company = aircraft.Company;
             _aircraftServices.RemoveAircraft(aircraft);
             _aircraftGarbageServices.CreateAircraftGarbage(aircraftGarbage);
 

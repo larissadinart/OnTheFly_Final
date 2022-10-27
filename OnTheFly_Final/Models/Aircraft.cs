@@ -16,7 +16,7 @@ namespace OnTheFly_Final.Models
         [Required(ErrorMessage = "Este campo é obrigatório!")]
         public DateTime DtRegistry { get; set; }
         public DateTime DtLastFlight { get; set; }
-        [Required(ErrorMessage = "Este campo é obrigatório!"), StringLength(19, ErrorMessage = "CNPJ inválido!")]
+        [Required(ErrorMessage = "Este campo é obrigatório!"), StringLength(18, ErrorMessage = "CNPJ inválido!")]
         public Company Company { get; set; }//cnpj
       
     }

@@ -45,7 +45,7 @@ namespace OnTheFly_Final.Controllers
         public ActionResult<List<Company>> GetAllCompany() => _companyServices.GetAllCompany();
 
 
-        [HttpGet("{cnpj}", Name = "GetCompany")]
+        [HttpGet("{cnpj:length(18)}", Name = "GetCompany")]
         public ActionResult<Company> GetCompany(string cnpj)
         {
             var company = _companyServices.GetCompany(cnpj);
