@@ -35,7 +35,7 @@ namespace OnTheFly_Final.Utils
                 resto = 11 - resto;
 
             digito = resto.ToString();
-            tempCnpj = tempCnpj + digito;
+            tempCnpj += digito;
             soma = 0;
 
             for (int i = 0; i < 13; i++)
@@ -49,7 +49,7 @@ namespace OnTheFly_Final.Utils
 
                 resto = 11 - resto;
 
-            digito = digito + resto.ToString();
+            digito += resto.ToString();
             return cnpj.EndsWith(digito);
         }
     }

@@ -25,6 +25,6 @@ namespace OnTheFly_Final.Models
 
         public bool? Status { get; set; }
 
-        public Address Address
+        public Address Address { get; set; }
     }
 }
