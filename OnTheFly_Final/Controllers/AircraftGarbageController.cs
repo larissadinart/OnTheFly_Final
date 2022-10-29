@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OnTheFly_Final.Models;
 using OnTheFly_Final.Services;
+using OnTheFly_Final.Utils;
 using System.Collections.Generic;
 
 namespace OnTheFly_Final.Controllers
@@ -10,6 +11,7 @@ namespace OnTheFly_Final.Controllers
     [ApiController]
     public class AircraftGarbageController : ControllerBase
     {
+        ValidationAircraft validation = new ValidationAircraft();
         private readonly AircraftGarbageServices _aircraftGarbageServices;
         private readonly AircraftServices _aircraftServices;
         public AircraftGarbageController(AircraftGarbageServices aircraftGarbageServices, AircraftServices aircraftServices)
@@ -21,7 +23,16 @@ namespace OnTheFly_Final.Controllers
         [HttpPost]
         public ActionResult<AircraftGarbage> PostAircraft(string rab)
         {
-            Aircraft aircraftIn = _aircraftServices.GetAircraft(rab);
+            rab = rab.ToLower();
+            var registration = validation.RabValidation(rab);
+            if (registration != rab)
+                return BadRequest("Aeronave não está de acordo com as normas");
+            rab = registration.Substring(0, 2) + "-" + registration.Substring(2, 3);
+            var plane = _aircraftServices.GetAircraft(rab);
+            if (plane == null) return NotFound("Aeronave não encontrada!");
+            //aqui tem que inserir formatado
+            //pergunta -> como fazer uma verificação do tipo -> tá formatada? se sim, busca, se não formata e busca
+            Aircraft aircraftIn = plane;
 
             AircraftGarbage aircraftGarbage = new AircraftGarbage()
             {
@@ -33,6 +44,7 @@ namespace OnTheFly_Final.Controllers
             };
 
             _aircraftGarbageServices.CreateAircraftGarbage(aircraftGarbage);
+            _aircraftServices.RemoveAircraft(aircraftIn);
             return CreatedAtRoute("GetAircraftGarbage", new { rab = aircraftIn.RAB.ToString() }, aircraftIn);
         }
         [HttpGet]

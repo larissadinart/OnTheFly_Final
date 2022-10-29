@@ -31,6 +31,7 @@ namespace OnTheFly_Final.Controllers
         {
             Aircraft aircraft = new Aircraft() { Capacity = capacity, RAB = registration, DtLastFlight = System.DateTime.Now, DtRegistry = System.DateTime.Now };
             Company company = _companyServices.GetCompany(cnpj);
+            
             aircraft.Company = company;
             aircraft.RAB = aircraft.RAB.ToLower();
             var rab = validation.RabValidation(aircraft.RAB);
